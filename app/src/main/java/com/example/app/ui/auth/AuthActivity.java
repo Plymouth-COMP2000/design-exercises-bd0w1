@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.app.R;
 import com.example.app.ui.guest.GuestMainActivity;
+import com.example.app.ui.remote.ApiTestActivity;
 import com.example.app.ui.staff.StaffMainActivity;
 
 public class AuthActivity extends AppCompatActivity {
@@ -21,6 +22,10 @@ public class AuthActivity extends AppCompatActivity {
 
         findViewById(R.id.btnGuest).setOnClickListener(v -> {
             startActivity(new Intent(this, GuestMainActivity.class));
+        });
+
+        findViewById(R.id.btnApiTest).setOnClickListener(v -> {
+            startActivity(new Intent(this, ApiTestActivity.class));
         });
     }
 }
