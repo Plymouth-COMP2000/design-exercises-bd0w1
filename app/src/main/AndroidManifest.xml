@@ -20,6 +20,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.guest.GuestMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
