@@ -13,10 +13,16 @@ import java.util.List;
 public class StaffReservationAdapter
         extends RecyclerView.Adapter<StaffReservationAdapter.VH> {
 
-    private final List<Reservation> items;
+    public interface OnReservationLongClick {
+        void onLongClick(Reservation r);
+    }
 
-    public StaffReservationAdapter(List<Reservation> items) {
+    private final List<Reservation> items;
+    private final OnReservationLongClick onLongClick;
+
+    public StaffReservationAdapter(List<Reservation> items, OnReservationLongClick onLongClick) {
         this.items = items;
+        this.onLongClick = onLongClick;
     }
 
     @NonNull
@@ -36,6 +42,11 @@ public class StaffReservationAdapter
                 " | Party: " + r.getPartySize()
         );
         h.txtStatus.setText("Status: " + r.getStatus());
+
+        h.itemView.setOnLongClickListener(v -> {
+            onLongClick.onLongClick(r);
+            return true;
+        });
     }
 
     @Override

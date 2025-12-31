@@ -31,7 +31,6 @@ public class GuestReservationsFragment extends Fragment {
         EditText edtDate = view.findViewById(R.id.edtDate);
         EditText edtTime = view.findViewById(R.id.edtTime);
         EditText edtPartySize = view.findViewById(R.id.edtPartySize);
-        EditText edtNotes = view.findViewById(R.id.edtNotes);
         Button btnSubmit = view.findViewById(R.id.btnSubmit);
 
         btnSubmit.setOnClickListener(v -> {
@@ -40,7 +39,6 @@ public class GuestReservationsFragment extends Fragment {
             String date = edtDate.getText().toString();
             String time = edtTime.getText().toString();
             int partySize = Integer.parseInt(edtPartySize.getText().toString());
-            String notes = edtNotes.getText().toString();
 
             Reservation r = new Reservation(
                     name,
@@ -48,7 +46,7 @@ public class GuestReservationsFragment extends Fragment {
                     date,
                     time,
                     partySize,
-                    notes,
+                    "",        // no notes anymore
                     "PENDING"
             );
 
@@ -64,7 +62,6 @@ public class GuestReservationsFragment extends Fragment {
             edtDate.setText("");
             edtTime.setText("");
             edtPartySize.setText("");
-            edtNotes.setText("");
         });
 
         return view;

@@ -1,5 +1,6 @@
 package com.example.app.ui.staff;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,19 +20,43 @@ import java.util.List;
 
 public class StaffReservationsFragment extends Fragment {
 
+    private RecyclerView rv;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_staff_reservations, container, false);
 
-        RecyclerView rv = view.findViewById(R.id.rvStaffReservations);
+        rv = view.findViewById(R.id.rvStaffReservations);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadReservations();
+    }
+
+    private void loadReservations() {
         AppDbHelper db = new AppDbHelper(requireContext());
         List<Reservation> res = db.getAllReservations();
 
-        rv.setAdapter(new StaffReservationAdapter(res));
+        rv.setAdapter(new StaffReservationAdapter(res, this::onReservationLongClick));
+    }
 
-        return view;
+    private void onReservationLongClick(Reservation r) {
+        AppDbHelper db = new AppDbHelper(requireContext());
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete reservation?")
+                .setMessage("This will permanently delete the reservation for " + r.getGuestName() + ".")
+                .setPositiveButton("Delete", (d, which) -> {
+                    db.deleteReservation(r.getId());
+                    // refresh list
+                    loadReservations();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }

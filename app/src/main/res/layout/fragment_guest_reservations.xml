@@ -40,12 +40,6 @@
             android:hint="Party size"
             android:inputType="number" />
 
-        <EditText
-            android:id="@+id/edtNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Notes (optional)" />
-
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
