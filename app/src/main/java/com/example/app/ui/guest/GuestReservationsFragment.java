@@ -11,12 +11,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.data.local.AppDbHelper;
 import com.example.app.data.model.Reservation;
+import com.example.app.ui.guest.reservations.GuestReservationAdapter;
+
+import java.util.List;
 
 public class GuestReservationsFragment extends Fragment {
+
+    private RecyclerView rvGuestReservations;
 
     @Nullable
     @Override
@@ -25,6 +32,10 @@ public class GuestReservationsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_guest_reservations, container, false);
+
+        rvGuestReservations = view.findViewById(R.id.rvGuestReservations);
+        rvGuestReservations.setLayoutManager(new LinearLayoutManager(requireContext()));
+        loadGuestReservations();
 
         EditText edtName = view.findViewById(R.id.edtName);
         EditText edtEmail = view.findViewById(R.id.edtEmail);
@@ -62,8 +73,22 @@ public class GuestReservationsFragment extends Fragment {
             edtDate.setText("");
             edtTime.setText("");
             edtPartySize.setText("");
+
+            loadGuestReservations();
         });
 
         return view;
+    }
+
+    private void loadGuestReservations() {
+        AppDbHelper db = new AppDbHelper(requireContext());
+        List<Reservation> res = db.getAllReservations();
+        rvGuestReservations.setAdapter(new GuestReservationAdapter(res));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadGuestReservations();
     }
 }

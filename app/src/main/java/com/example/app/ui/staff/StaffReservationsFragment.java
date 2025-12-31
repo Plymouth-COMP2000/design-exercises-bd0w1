@@ -49,14 +49,17 @@ public class StaffReservationsFragment extends Fragment {
     private void onReservationLongClick(Reservation r) {
         AppDbHelper db = new AppDbHelper(requireContext());
         new AlertDialog.Builder(requireContext())
-                .setTitle("Delete reservation?")
-                .setMessage("This will permanently delete the reservation for " + r.getGuestName() + ".")
-                .setPositiveButton("Delete", (d, which) -> {
+            .setTitle("Manage reservation")
+            .setItems(new CharSequence[]{"Approve", "Cancel", "Delete"}, (d, which) -> {
+                if (which == 0) {
+                    db.updateReservationStatus(r.getId(), "APPROVED");
+                } else if (which == 1) {
+                    db.updateReservationStatus(r.getId(), "CANCELLED");
+                } else {
                     db.deleteReservation(r.getId());
-                    // refresh list
-                    loadReservations();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+                }
+                loadReservations();
+            })
+            .show();
     }
 }

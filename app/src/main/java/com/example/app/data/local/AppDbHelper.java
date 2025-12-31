@@ -98,6 +98,13 @@ public class AppDbHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_RESERVATIONS, COL_RESERVATION_ID + "=?", new String[]{String.valueOf(id)});
     }
 
+    public int updateReservationStatus(long id, String status) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_STATUS, status);
+        return db.update(TABLE_RESERVATIONS, cv, COL_RESERVATION_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
     public String getDbPath() {
         return getReadableDatabase().getPath();
     }
