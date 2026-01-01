@@ -12,29 +12,38 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
+import com.example.app.data.local.AppDbHelper;
 import com.example.app.data.model.MenuItem;
 import com.example.app.ui.guest.menu.MenuAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuestMenuFragment extends Fragment {
+
+    private RecyclerView rv;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guest_menu, container, false);
 
-        RecyclerView rv = view.findViewById(R.id.rvMenu);
+        rv = view.findViewById(R.id.rvMenu);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        List<MenuItem> demo = new ArrayList<>();
-        demo.add(new MenuItem("Burger", "Beef burger with fries", 9.99, true));
-        demo.add(new MenuItem("Salad", "Mixed salad", 6.50, true));
-        demo.add(new MenuItem("Pizza", "Margherita pizza", 10.50, true));
-
-        rv.setAdapter(new MenuAdapter(demo));
+        loadMenuFromDb();
 
         return view;
+    }
+
+    private void loadMenuFromDb() {
+        AppDbHelper db = new AppDbHelper(requireContext());
+        List<MenuItem> items = db.getAllMenuItems();
+        rv.setAdapter(new MenuAdapter(items));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadMenuFromDb();
     }
 }
