@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.data.local.AppDbHelper;
+import com.example.app.data.local.NotificationPrefs;
 import com.example.app.data.model.Reservation;
 import com.example.app.ui.guest.reservations.GuestReservationAdapter;
+import com.example.app.ui.notifications.NotificationHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
@@ -74,9 +75,13 @@ public class GuestReservationsFragment extends Fragment {
             AppDbHelper db = new AppDbHelper(requireContext());
             db.insertReservation(r);
 
-            Toast.makeText(requireContext(),
-                    "Reservation submitted",
-                    Toast.LENGTH_SHORT).show();
+            if (NotificationPrefs.areNotificationsEnabled(requireContext())) {
+                NotificationHelper.showReservationUpdate(
+                        requireContext(),
+                        "New Reservation",
+                        "A new booking for " + r.getPartySize() + " was made by " + r.getGuestName()
+                );
+            }
 
             edtName.setText("");
             edtEmail.setText("");
@@ -129,7 +134,6 @@ public class GuestReservationsFragment extends Fragment {
                     AppDbHelper db = new AppDbHelper(requireContext());
                     db.updateReservationStatus(reservation.getId(), "CANCELLED");
                     loadGuestReservations();
-                    Toast.makeText(getContext(), "Reservation Cancelled", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Go Back", null)
                 .show();
