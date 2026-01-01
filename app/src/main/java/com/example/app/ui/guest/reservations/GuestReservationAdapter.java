@@ -18,10 +18,16 @@ import java.util.List;
 
 public class GuestReservationAdapter extends RecyclerView.Adapter<GuestReservationAdapter.VH> {
 
-    private final List<Reservation> items;
+    public interface OnReservationLongClickListener {
+        void onReservationLongClick(Reservation reservation);
+    }
 
-    public GuestReservationAdapter(List<Reservation> items) {
+    private final List<Reservation> items;
+    private final OnReservationLongClickListener longClickListener;
+
+    public GuestReservationAdapter(List<Reservation> items, OnReservationLongClickListener longClickListener) {
         this.items = items;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -49,6 +55,11 @@ public class GuestReservationAdapter extends RecyclerView.Adapter<GuestReservati
                 break;
         }
         h.chipStatus.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(h.itemView.getContext(), statusColor)));
+
+        h.itemView.setOnLongClickListener(v -> {
+            longClickListener.onReservationLongClick(r);
+            return true;
+        });
     }
 
     @Override

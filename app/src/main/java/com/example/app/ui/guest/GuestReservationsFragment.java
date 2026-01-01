@@ -1,5 +1,6 @@
 package com.example.app.ui.guest;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -117,7 +118,21 @@ public class GuestReservationsFragment extends Fragment {
     private void loadGuestReservations() {
         AppDbHelper db = new AppDbHelper(requireContext());
         List<Reservation> res = db.getAllReservations();
-        rvGuestReservations.setAdapter(new GuestReservationAdapter(res));
+        rvGuestReservations.setAdapter(new GuestReservationAdapter(res, this::onReservationLongClick));
+    }
+
+    private void onReservationLongClick(Reservation reservation) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Cancel Reservation?")
+                .setMessage("Are you sure you want to cancel your reservation for " + reservation.getDate() + " at " + reservation.getTime() + "?")
+                .setPositiveButton("Cancel Reservation", (dialog, which) -> {
+                    AppDbHelper db = new AppDbHelper(requireContext());
+                    db.updateReservationStatus(reservation.getId(), "CANCELLED");
+                    loadGuestReservations();
+                    Toast.makeText(getContext(), "Reservation Cancelled", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Go Back", null)
+                .show();
     }
 
     @Override
