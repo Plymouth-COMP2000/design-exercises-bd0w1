@@ -36,12 +36,10 @@ public class StaffMenuFragment extends Fragment {
 
         View addBtn = view.findViewById(R.id.btnAddMenuItem);
         addBtn.setOnClickListener(v -> {
-            // quick proof it's being clicked
             android.widget.Toast.makeText(requireContext(), "Add clicked", android.widget.Toast.LENGTH_SHORT).show();
             showAddDialog();
         });
 
-        // Optional seed (helps with screenshots)
         AppDbHelper db = new AppDbHelper(requireContext());
         if (db.getAllMenuItems().isEmpty()) {
             db.insertMenuItem(new MenuItem("Burger", "Beef burger", 9.99, true));

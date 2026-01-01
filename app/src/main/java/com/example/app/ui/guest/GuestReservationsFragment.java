@@ -57,7 +57,7 @@ public class GuestReservationsFragment extends Fragment {
                     date,
                     time,
                     partySize,
-                    "",        // no notes anymore
+                    "",
                     "PENDING"
             );
 

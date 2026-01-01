@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
-import com.example.app.data.model.MenuItem; // IMPORTANT: your model, not android.view.MenuItem
+import com.example.app.data.model.MenuItem;
 
 import java.util.List;
 

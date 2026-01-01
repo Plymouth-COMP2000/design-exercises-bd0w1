@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.data.local.AppDbHelper;
+import com.example.app.data.local.NotificationPrefs;
 import com.example.app.data.model.Reservation;
+import com.example.app.ui.notifications.NotificationHelper;
 
 import java.util.List;
 
@@ -51,14 +54,26 @@ public class StaffReservationsFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
             .setTitle("Manage reservation")
             .setItems(new CharSequence[]{"Approve", "Cancel", "Delete"}, (d, which) -> {
+                String newStatus = "";
                 if (which == 0) {
-                    db.updateReservationStatus(r.getId(), "APPROVED");
+                    newStatus = "APPROVED";
+                    db.updateReservationStatus(r.getId(), newStatus);
                 } else if (which == 1) {
-                    db.updateReservationStatus(r.getId(), "CANCELLED");
+                    newStatus = "CANCELLED";
+                    db.updateReservationStatus(r.getId(), newStatus);
                 } else {
                     db.deleteReservation(r.getId());
                 }
                 loadReservations();
+
+                if (!newStatus.isEmpty() && NotificationPrefs.areNotificationsEnabled(requireContext())) {
+                    Toast.makeText(requireContext(), "Sending notification...", Toast.LENGTH_SHORT).show();
+                    NotificationHelper.showReservationUpdate(
+                            requireContext(),
+                            "Reservation " + newStatus,
+                            "Reservation for " + r.getGuestName() + " is now " + newStatus
+                    );
+                }
             })
             .show();
     }

@@ -4,11 +4,11 @@ public class Reservation {
     private long id;
     private String guestName;
     private String guestEmail;
-    private String date;     // keep as String for now
-    private String time;     // keep as String for now
+    private String date;
+    private String time;
     private int partySize;
     private String notes;
-    private String status;   // PENDING/APPROVED/CANCELLED
+    private String status;
 
     public Reservation(long id, String guestName, String guestEmail, String date, String time,
                        int partySize, String notes, String status) {

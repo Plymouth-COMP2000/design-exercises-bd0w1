@@ -4,18 +4,32 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.app.R;
+import com.example.app.data.local.NotificationPrefs;
 
 public class GuestSettingsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_guest_settings, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_guest_settings, container, false);
+
+        Switch sw = view.findViewById(R.id.switchNotifications);
+
+        sw.setChecked(NotificationPrefs.areNotificationsEnabled(requireContext()));
+
+        sw.setOnCheckedChangeListener((buttonView, isChecked) ->
+                NotificationPrefs.setNotificationsEnabled(requireContext(), isChecked)
+        );
+
+        return view;
     }
 }

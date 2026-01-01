@@ -17,7 +17,6 @@ public class AppDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "app.db";
     private static final int DB_VERSION = 2;
 
-    // Menu Table
     public static final String TBL_MENU = "menu_items";
     public static final String COL_MENU_ID = "_id";
     public static final String COL_MENU_NAME = "name";
@@ -25,7 +24,6 @@ public class AppDbHelper extends SQLiteOpenHelper {
     public static final String COL_MENU_PRICE = "price";
     public static final String COL_MENU_AVAILABLE = "available";
 
-    // Reservations Table
     private static final String TBL_RES = "reservations";
     private static final String COL_RES_ID = "id";
     private static final String COL_RES_GUEST_NAME = "guest_name";
@@ -71,8 +69,6 @@ public class AppDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TBL_RES);
         onCreate(db);
     }
-
-    // --- Reservation methods ---
 
     public long insertReservation(Reservation reservation) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -133,8 +129,6 @@ public class AppDbHelper extends SQLiteOpenHelper {
         cv.put(COL_RES_STATUS, status);
         return db.update(TBL_RES, cv, COL_RES_ID + "=?", new String[]{String.valueOf(id)});
     }
-
-    // --- Menu Item methods ---
 
     public long insertMenuItem(MenuItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
