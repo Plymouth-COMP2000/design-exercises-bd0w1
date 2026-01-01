@@ -176,6 +176,17 @@ public class AppDbHelper extends SQLiteOpenHelper {
         return db.delete(TBL_MENU, COL_MENU_ID + "=?", new String[]{String.valueOf(id)});
     }
 
+    public int updateMenuItem(MenuItem item) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_MENU_NAME, item.getName());
+        values.put(COL_MENU_DESC, item.getDescription());
+        values.put(COL_MENU_PRICE, item.getPrice());
+        values.put(COL_MENU_AVAILABLE, item.isAvailable() ? 1 : 0);
+
+        return db.update(TBL_MENU, values, COL_MENU_ID + "=?", new String[]{String.valueOf(item.getId())});
+    }
+
     public String getDbPath() {
         return getReadableDatabase().getPath();
     }

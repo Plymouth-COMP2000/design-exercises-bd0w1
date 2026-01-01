@@ -36,7 +36,7 @@ public class StaffMenuFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         FloatingActionButton fab = view.findViewById(R.id.fabAddMenuItem);
-        fab.setOnClickListener(v -> showAddDialog());
+        fab.setOnClickListener(v -> showAddDialog(null));
 
         AppDbHelper db = new AppDbHelper(requireContext());
         if (db.getAllMenuItems().isEmpty()) {
@@ -60,18 +60,27 @@ public class StaffMenuFragment extends Fragment {
 
         rv.setAdapter(new StaffMenuAdapter(items, item -> {
             new AlertDialog.Builder(requireContext())
-                    .setTitle("Delete menu item?")
-                    .setMessage("Delete " + item.getName() + "?")
-                    .setPositiveButton("Delete", (d, which) -> {
-                        db.deleteMenuItem(item.getId());
-                        loadMenu();
+                    .setTitle("Manage Item")
+                    .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                        if (which == 0) {
+                            showAddDialog(item);
+                        } else {
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle("Delete menu item?")
+                                    .setMessage("Delete " + item.getName() + "?")
+                                    .setPositiveButton("Delete", (d, which2) -> {
+                                        db.deleteMenuItem(item.getId());
+                                        loadMenu();
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                        }
                     })
-                    .setNegativeButton("Cancel", null)
                     .show();
         }));
     }
 
-    private void showAddDialog() {
+    private void showAddDialog(@Nullable MenuItem item) {
         View dialogView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.dialog_add_menu_item, null);
 
@@ -79,10 +88,19 @@ public class StaffMenuFragment extends Fragment {
         EditText edtDesc = dialogView.findViewById(R.id.edtDesc);
         EditText edtPrice = dialogView.findViewById(R.id.edtPrice);
 
+        String dialogTitle = (item == null) ? "Add Menu Item" : "Edit Menu Item";
+        String positiveButtonText = (item == null) ? "Add" : "Save";
+
+        if (item != null) {
+            edtName.setText(item.getName());
+            edtDesc.setText(item.getDescription());
+            edtPrice.setText(String.valueOf(item.getPrice()));
+        }
+
         new AlertDialog.Builder(requireContext())
-                .setTitle("Add menu item")
+                .setTitle(dialogTitle)
                 .setView(dialogView)
-                .setPositiveButton("Add", (d, which) -> {
+                .setPositiveButton(positiveButtonText, (d, which) -> {
                     String name = edtName.getText().toString().trim();
                     String desc = edtDesc.getText().toString().trim();
                     String priceStr = edtPrice.getText().toString().trim();
@@ -92,7 +110,12 @@ public class StaffMenuFragment extends Fragment {
                     double price = Double.parseDouble(priceStr);
 
                     AppDbHelper db = new AppDbHelper(requireContext());
-                    db.insertMenuItem(new MenuItem(name, desc, price, true));
+                    if (item == null) {
+                        db.insertMenuItem(new MenuItem(name, desc, price, true));
+                    } else {
+                        MenuItem updatedItem = new MenuItem(item.getId(), name, desc, price, item.isAvailable());
+                        db.updateMenuItem(updatedItem);
+                    }
                     loadMenu();
                 })
                 .setNegativeButton("Cancel", null)
