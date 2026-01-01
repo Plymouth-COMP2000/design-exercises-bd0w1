@@ -1,15 +1,18 @@
 package com.example.app.ui.guest.reservations;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.data.model.Reservation;
+import com.google.android.material.chip.Chip;
 
 import java.util.List;
 
@@ -34,7 +37,18 @@ public class GuestReservationAdapter extends RecyclerView.Adapter<GuestReservati
         Reservation r = items.get(position);
         h.txtWhen.setText(r.getDate() + " " + r.getTime());
         h.txtParty.setText("Party: " + r.getPartySize());
-        h.txtStatus.setText("Status: " + r.getStatus());
+        h.chipStatus.setText(r.getStatus());
+
+        int statusColor = R.color.status_pending;
+        switch (r.getStatus()) {
+            case "APPROVED":
+                statusColor = R.color.status_approved;
+                break;
+            case "CANCELLED":
+                statusColor = R.color.status_cancelled;
+                break;
+        }
+        h.chipStatus.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(h.itemView.getContext(), statusColor)));
     }
 
     @Override
@@ -43,12 +57,13 @@ public class GuestReservationAdapter extends RecyclerView.Adapter<GuestReservati
     }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView txtWhen, txtParty, txtStatus;
+        TextView txtWhen, txtParty;
+        Chip chipStatus;
         VH(@NonNull View itemView) {
             super(itemView);
             txtWhen = itemView.findViewById(R.id.txtWhen);
             txtParty = itemView.findViewById(R.id.txtParty);
-            txtStatus = itemView.findViewById(R.id.txtStatus);
+            chipStatus = itemView.findViewById(R.id.chipStatus);
         }
     }
 }

@@ -1,13 +1,19 @@
 package com.example.app.ui.staff;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.app.R;
 import com.example.app.data.model.Reservation;
+import com.google.android.material.chip.Chip;
+
 import java.util.List;
 
 public class StaffReservationAdapter
@@ -41,7 +47,18 @@ public class StaffReservationAdapter
                 r.getDate() + " " + r.getTime() +
                 " | Party: " + r.getPartySize()
         );
-        h.txtStatus.setText("Status: " + r.getStatus());
+        h.chipStatus.setText(r.getStatus());
+
+        int statusColor = R.color.status_pending;
+        switch (r.getStatus()) {
+            case "APPROVED":
+                statusColor = R.color.status_approved;
+                break;
+            case "CANCELLED":
+                statusColor = R.color.status_cancelled;
+                break;
+        }
+        h.chipStatus.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(h.itemView.getContext(), statusColor)));
 
         h.itemView.setOnLongClickListener(v -> {
             onLongClick.onLongClick(r);
@@ -53,12 +70,14 @@ public class StaffReservationAdapter
     public int getItemCount() { return items.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView txtGuest, txtDetails, txtStatus;
+        TextView txtGuest, txtDetails;
+        Chip chipStatus;
+
         VH(View v) {
             super(v);
             txtGuest = v.findViewById(R.id.txtGuest);
             txtDetails = v.findViewById(R.id.txtDetails);
-            txtStatus = v.findViewById(R.id.txtStatus);
+            chipStatus = v.findViewById(R.id.chipStatus);
         }
     }
 }

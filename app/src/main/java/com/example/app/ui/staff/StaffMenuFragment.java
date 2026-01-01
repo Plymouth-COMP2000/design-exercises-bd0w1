@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.app.R;
 import com.example.app.data.local.AppDbHelper;
 import com.example.app.data.model.MenuItem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -34,11 +35,8 @@ public class StaffMenuFragment extends Fragment {
         rv = view.findViewById(R.id.rvStaffMenu);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        View addBtn = view.findViewById(R.id.btnAddMenuItem);
-        addBtn.setOnClickListener(v -> {
-            android.widget.Toast.makeText(requireContext(), "Add clicked", android.widget.Toast.LENGTH_SHORT).show();
-            showAddDialog();
-        });
+        FloatingActionButton fab = view.findViewById(R.id.fabAddMenuItem);
+        fab.setOnClickListener(v -> showAddDialog());
 
         AppDbHelper db = new AppDbHelper(requireContext());
         if (db.getAllMenuItems().isEmpty()) {
