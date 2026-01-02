@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.app.R;
 import com.example.app.ui.guest.GuestMainActivity;
 import com.example.app.ui.remote.ApiTestActivity;
-import com.example.app.ui.staff.StaffMainActivity;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -17,11 +16,12 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
 
         findViewById(R.id.btnStaff).setOnClickListener(v -> {
-            startActivity(new Intent(this, StaffMainActivity.class));
+            startActivity(new Intent(this, StaffLoginActivity.class));
         });
 
         findViewById(R.id.btnGuest).setOnClickListener(v -> {
             startActivity(new Intent(this, GuestMainActivity.class));
+            finish();
         });
 
         findViewById(R.id.btnApiTest).setOnClickListener(v -> {
